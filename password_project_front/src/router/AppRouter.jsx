@@ -1,15 +1,27 @@
-import { Route, Routes } from "react-router"
+import { Navigate, Route, Routes } from "react-router"
 import { AuthRoutes } from "../auth/routes/AuthRoutes"
 import { PassworRoutes } from "../password/routes/PassworRoutes"
+import { useSelector } from "react-redux";
+import { useCheckAuth } from "../hooks/useCheckAuth";
 
 export const AppRouter = () => {
-    return(
-        <Routes>
-            {/* login y registro*/}
-            <Route path="/auth/*" element={<AuthRoutes/>} />
+    const  status  = useCheckAuth();
 
-            {/* Password App */}
-            <Route path="/*" element={<PassworRoutes/>} />
+    return(
+
+
+        <Routes>
+            
+            {
+                (status === 'authenticated') 
+                ? <Route path="/*" element={<PassworRoutes/>}/> 
+                : <Route path="/auth/*" element={<AuthRoutes/>}/> /*login y registro */
+
+            }
+
+            <Route path="/*" element={<Navigate to='/auth/login'/>}/>
         </Routes>
+
+        
     )
 }
